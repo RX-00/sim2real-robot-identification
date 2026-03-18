@@ -26,7 +26,7 @@ GO2_HIP_ACTUATOR_CFG = PaceDCMotorCfg(
     encoder_bias={".*": 0.0},  # encoder bias in radians
     # note: modeling coulomb friction if friction = dynamic_friction
     # > in newer Isaac Sim versions, friction is renamed to static_friction
-    static_friction={".*": 0.0},  # static friction coefficient (Nm)
+    friction={".*": 0.0},  # static friction coefficient (Nm)
     dynamic_friction={".*": 0.0},  # dynamic friction coefficient (Nm)
     viscous_friction={".*": 0.0},  # viscous friction coefficient (Nm s/rad)
     max_delay=5,  # max delay in simulation steps
@@ -43,7 +43,7 @@ GO2_THIGH_ACTUATOR_CFG = PaceDCMotorCfg(
     encoder_bias={".*": 0.0},  # encoder bias in radians
     # note: modeling coulomb friction if friction = dynamic_friction
     # > in newer Isaac Sim versions, friction is renamed to static_friction
-    static_friction={".*": 0.0},  # static friction coefficient (Nm)
+    friction={".*": 0.0},  # static friction coefficient (Nm)
     dynamic_friction={".*": 0.0},  # dynamic friction coefficient (Nm)
     viscous_friction={".*": 0.0},  # viscous friction coefficient (Nm s/rad)
     max_delay=5,  # max delay in simulation steps
@@ -59,7 +59,7 @@ GO2_CALF_ACTUATOR_CFG = PaceDCMotorCfg(
     encoder_bias={".*": 0.0},  # encoder bias in radians
     # note: modeling coulomb friction if friction = dynamic_friction
     # > in newer Isaac Sim versions, friction is renamed to static_friction
-    static_friction={".*": 0.0},  # static friction coefficient (Nm)
+    friction={".*": 0.0},  # static friction coefficient (Nm)
     dynamic_friction={".*": 0.0},  # dynamic friction coefficient (Nm)
     viscous_friction={".*": 0.0},  # viscous friction coefficient (Nm s/rad)
     max_delay=5,  # max delay in simulation steps
@@ -83,7 +83,7 @@ GO2_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.4),
+        pos=(0.0, 0.0, 1.0),
         joint_pos={
             ".*L_hip_joint": 0.,
             ".*R_hip_joint": 0.,
@@ -102,7 +102,7 @@ GO2_CFG = ArticulationCfg(
 class Go2PaceCfg(PaceCfg):
     """Pace configuration for Go2 robot."""
     robot_name: str = "go2_sim"
-    data_dir: str = f"{ISAAC_ASSET_DIR}/../../dataset/go2/traj_0.pt"  # located in pace_sim2real/data/go2_sim/chirp_data.pt
+    data_dir: str = f"{ISAAC_ASSET_DIR}/../../datasets/go2/traj_0.pt"  # located in pace_sim2real/data/go2_sim/chirp_data.pt
     bounds_params: torch.Tensor = torch.zeros((49, 2))  # 12 + 12 + 12 + 12 + 1 = 49 parameters to optimize
     joint_order: list[str] = [
         "FL_hip_joint",
@@ -133,7 +133,7 @@ class Go2PaceCfg(PaceCfg):
 @configclass
 class Go2PaceSceneCfg(PaceSim2realSceneCfg):
     """Configuration for Go2 robot in Pace Sim2Real environment."""
-    robot: ArticulationCfg = GO2_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot", init_state=ArticulationCfg.InitialStateCfg(pos=(0.0, 0.0, 1.0)),
+    robot: ArticulationCfg = GO2_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot",
                                               actuators={"hip": GO2_HIP_ACTUATOR_CFG, "thigh": GO2_THIGH_ACTUATOR_CFG, "calf": GO2_CALF_ACTUATOR_CFG})
 
 @configclass
