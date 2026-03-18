@@ -94,6 +94,13 @@ class Data_Collection_Node(Node):
         self.stand_up_and_down_actions.FR = goDown_qpos[10:13]
         self.stand_up_and_down_actions.RL = goDown_qpos[13:16]
         self.stand_up_and_down_actions.RR = goDown_qpos[16:29]
+
+        self.stand_up_and_down_actions.FL[2] += 0.4
+        self.stand_up_and_down_actions.FR[2] += 0.4
+        self.stand_up_and_down_actions.RL[2] += 0.4
+        self.stand_up_and_down_actions.RR[2] += 0.4
+        
+        
         self.Kp_stand_up_and_down = config.Kp_walking
         self.Kd_stand_up_and_down = config.Kd_walking
 
