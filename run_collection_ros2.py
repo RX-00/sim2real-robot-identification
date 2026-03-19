@@ -30,8 +30,8 @@ os.system("renice -n -21 -p " + str(pid))
 os.system("echo -20 > /proc/" + str(pid) + "/autogroup")
 #for real time, launch it with chrt -r 99 python3 run_controller.py
 
-USE_MUJOCO_RENDER = True
-USE_MUJOCO_SIMULATION = True
+USE_MUJOCO_RENDER = False
+USE_MUJOCO_SIMULATION = False
 
 
 CONTROL_FREQ = config.frequency_collection # Hz 
@@ -95,10 +95,10 @@ class Data_Collection_Node(Node):
         self.stand_up_and_down_actions.RL = goDown_qpos[13:16]
         self.stand_up_and_down_actions.RR = goDown_qpos[16:29]
 
-        self.stand_up_and_down_actions.FL[2] += 0.4
-        self.stand_up_and_down_actions.FR[2] += 0.4
-        self.stand_up_and_down_actions.RL[2] += 0.4
-        self.stand_up_and_down_actions.RR[2] += 0.4
+        self.stand_up_and_down_actions.FL[2] += 0.3
+        self.stand_up_and_down_actions.FR[2] += 0.3
+        self.stand_up_and_down_actions.RL[2] += 0.3
+        self.stand_up_and_down_actions.RR[2] += 0.3
         
         
         self.Kp_stand_up_and_down = config.Kp_walking
@@ -481,6 +481,7 @@ class Data_Collection_Node(Node):
         trajectory_generator_msg.joints_velocity = np.zeros(12).tolist()
         trajectory_generator_msg.kp = (np.ones(12) * Kp).tolist()
         trajectory_generator_msg.kd = (np.ones(12) * Kd).tolist()
+        self.publisher_trajectory_generator.publish(trajectory_generator_msg)
         
         
         
