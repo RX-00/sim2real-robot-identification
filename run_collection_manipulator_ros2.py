@@ -242,7 +242,7 @@ class Data_Collection_Node(Node):
         dof_target_pos_buffer = torch.zeros(num_steps, 7, device="cpu")
         dof_target_vel_buffer = torch.zeros(num_steps, 7, device="cpu")
         dof_target_commanded_torque_buffer = torch.zeros(num_steps, 7, device="cpu")
-        breakpoint()
+        
         dof_pos_buffer[:, :] = torch.from_numpy(self.saved_actual_joints_position)
         dof_vel_buffer[:, :] = torch.from_numpy(self.saved_actual_joints_velocity)
         dof_target_pos_buffer[:, :] = torch.from_numpy(self.saved_desired_joints_position)
