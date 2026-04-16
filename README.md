@@ -7,6 +7,9 @@ This repo interfaces directly with [Pace](https://github.com/leggedrobotics/pace
 Work in progress for supporting mujoco identification, PRs are very welcome!
 
 
+The models (usd and xml) identified so far can be found in the folder **robot_model**. 
+
+
 ## Run a collection
 This repo works best with [unitree-ros2-dls](https://github.com/iit-DLSLab/unitree-ros2-dls) for communicating with unitree go2, b2, a2, and z1 robots. Soon, will support agilex piper arms using [piper-ros2-dls2](https://github.com/iit-DLSLab/piper-ros2-dls2).
 
