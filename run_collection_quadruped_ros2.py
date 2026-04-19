@@ -283,15 +283,25 @@ class Data_Collection_Node(Node):
         duration = num_steps/CONTROL_FREQ
         time_data = torch.linspace(0, duration, steps=num_steps, device="cpu")
         dof_pos_buffer = torch.zeros(num_steps, 12, device="cpu")
+        dof_vel_buffer = torch.zeros(num_steps, 12, device="cpu")
         dof_target_pos_buffer = torch.zeros(num_steps, 12, device="cpu")
+        dof_target_vel_buffer = torch.zeros(num_steps, 12, device="cpu")
+        dof_target_commanded_torque_buffer = torch.zeros(num_steps, 12, device="cpu")
 
         dof_pos_buffer[:, :] = torch.from_numpy(self.saved_actual_joints_position)
+        dof_vel_buffer[:, :] = torch.from_numpy(self.saved_actual_joints_velocity)
         dof_target_pos_buffer[:] = torch.from_numpy(self.saved_desired_joints_position)
+        #dof_target_vel_buffer[:] = torch.from_numpy(self.saved_desired_joints_velocity)
+        #dof_target_commanded_torque_buffer[:] = torch.from_numpy(self.saved_commanded_torque)
 
         torch.save({
             "time": time_data.cpu(),
             "dof_pos": dof_pos_buffer.cpu(),
+            "dof_vel": dof_vel_buffer.cpu(),
             "des_dof_pos": dof_target_pos_buffer.cpu(),
+            "des_dof_vel": dof_target_vel_buffer.cpu(),
+            "kp": self.Kp,
+            "kd": self.Kd,
         }, "datasets/" + config.robot + f"/traj_{self.num_traj_saved}.pt")
 
         self.num_traj_saved += 1

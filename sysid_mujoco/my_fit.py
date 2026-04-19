@@ -55,6 +55,7 @@ def parse_args() -> argparse.Namespace:
         "--dataset",
         nargs="+",
         type=Path,
+        default=[Path(str(REPO_ROOT) + "/datasets/" + config.robot + "/traj_0.pt")],
         help="Raw repository datasets (.pt). If provided, conversion is done in-memory.",
     )
     parser.add_argument(

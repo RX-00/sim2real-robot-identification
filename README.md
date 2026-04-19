@@ -36,7 +36,7 @@ python3 sysid_isaaclab/my_fit.py --headless
 ## Run a calibration in Mujoco
 
 ```bash
-python3 sysid_mujoco/fit.py --headless
+python3 sysid_mujoco/my_fit.py 
 ```
 
 ## How to contribute

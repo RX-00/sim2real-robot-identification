@@ -6,7 +6,7 @@ The workflow is:`
 * Fit per-joint `damping`, `armature`, and `frictionloss` on the recorded trajectory, from the repo main folder:
 
 ```bash
-python sysid_mujoco/my_fit.py --dataset <path/to/the/dataset> --robot"name of the robot"
+python sysid_mujoco/my_fit.py
 ```
 
 Notes:

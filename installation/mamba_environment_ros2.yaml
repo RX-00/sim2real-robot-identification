@@ -23,3 +23,7 @@ dependencies:
   - readchar
   - onnxruntime
   - torch
+  - mujoco
+  - tabulate
+  - plotly
+  - mediapy
