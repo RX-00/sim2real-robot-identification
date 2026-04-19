@@ -235,6 +235,9 @@ class Data_Collection_Node(Node):
         #dof_target_vel_buffer[:, :] = torch.from_numpy(self.saved_desired_joints_velocity)
         dof_target_commanded_torque_buffer[:, :] = torch.from_numpy(self.saved_commanded_joints_torque)
 
+        save_dir = "datasets/" + config.robot
+        os.makedirs(save_dir, exist_ok=True)
+
         torch.save({
             "time": time_data.cpu(),
             "dof_pos": dof_pos_buffer.cpu(),
