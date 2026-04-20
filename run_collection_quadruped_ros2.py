@@ -95,8 +95,8 @@ class Data_Collection_Node(Node):
         self.stand_up_and_down_actions[11] += 0.3
         
         
-        self.Kp_stand_up_and_down = config.Kp
-        self.Kd_stand_up_and_down = config.Kd
+        self.Kp = config.Kp
+        self.Kd = config.Kd
 
         self.calibration_reference_joint_positions = None
         
@@ -188,8 +188,8 @@ class Data_Collection_Node(Node):
             desired_joint_pos[1] = copy.deepcopy(self.calibration_reference_joint_positions[1])
             desired_joint_pos[2] = copy.deepcopy(self.calibration_reference_joint_positions[2])
             desired_joint_pos[3] = copy.deepcopy(self.calibration_reference_joint_positions[3])
-            Kp = self.Kp_stand_up_and_down
-            Kd = self.Kd_stand_up_and_down
+            Kp = self.Kp
+            Kd = self.Kd
             
         elif self.console.falling_collection:
             # Falling collection: target first, then free fall
@@ -200,8 +200,8 @@ class Data_Collection_Node(Node):
                 random_time = 1.8
             if time.time() - self.start_collection_time > (2.0-random_time):
                 # Free falling!!
-                Kp = 0.0
-                Kd = 0.0
+                Kp = self.Kp*0.0
+                Kd = self.Kd*0.0
                 desired_joint_pos = np.zeros((4, 3))
                 desired_joint_pos[0] = np.zeros((1, int(self.mjModel.nu/4))) + 20.
                 desired_joint_pos[1] = np.zeros((1, int(self.mjModel.nu/4))) + 20.
@@ -209,8 +209,8 @@ class Data_Collection_Node(Node):
                 desired_joint_pos[3] = np.zeros((1, int(self.mjModel.nu/4))) + 20.
             else:
                 # Reach the target
-                Kp = self.Kp_stand_up_and_down
-                Kd = self.Kd_stand_up_and_down
+                Kp = self.Kp
+                Kd = self.Kd
                 desired_joint_pos = np.zeros((4, 3))
                 desired_joint_pos[0] = copy.deepcopy(self.calibration_reference_joint_positions[0])
                 desired_joint_pos[1] = copy.deepcopy(self.calibration_reference_joint_positions[1])
@@ -219,8 +219,8 @@ class Data_Collection_Node(Node):
         
         elif self.console.trajectory_collection:
             # Trajectory collection: follow the reference trajectory
-            Kp = self.Kp_stand_up_and_down
-            Kd = self.Kd_stand_up_and_down
+            Kp = self.Kp
+            Kd = self.Kd
 
             time_traj = self.start_collection_time - time.time()
             desired_joint_pos = np.zeros((4, 3))
@@ -369,8 +369,8 @@ class Data_Collection_Node(Node):
             desired_joint_pos[3] = self.stand_up_and_down_actions[9:12]
 
             # Impedence Loop
-            Kp = self.Kp_stand_up_and_down
-            Kd = self.Kd_stand_up_and_down
+            Kp = self.Kp
+            Kd = self.Kd
             
 
         elif(self.console.isActivated and (self.console.setpoint_collection or self.console.falling_collection)):
@@ -421,8 +421,8 @@ class Data_Collection_Node(Node):
             desired_joint_pos[3] = self.stand_up_and_down_actions[9:12]
 
             # Impedence Loop
-            Kp = self.Kp_stand_up_and_down*0.0
-            Kd = self.Kd_stand_up_and_down*0.0
+            Kp = self.Kp*0.0
+            Kd = self.Kd*0.0
             
         
         if USE_MUJOCO_SIMULATION:
@@ -445,11 +445,11 @@ class Data_Collection_Node(Node):
                 error_joints_pos[3] = desired_joint_pos[3] - joints_pos[3]
                 
                 tau = np.zeros((4, 3))
-                tau[0] = Kp * (error_joints_pos[0]) - Kd * joints_vel[0]
-                tau[1] = Kp * (error_joints_pos[1]) - Kd * joints_vel[1]
-                tau[2] = Kp * (error_joints_pos[2]) - Kd * joints_vel[2]
-                tau[3] = Kp * (error_joints_pos[3]) - Kd * joints_vel[3]
-                
+                tau[0] = Kp[0:3] * (error_joints_pos[0]) - Kd[0:3] * joints_vel[0]
+                tau[1] = Kp[3:6] * (error_joints_pos[1]) - Kd[3:6] * joints_vel[1]
+                tau[2] = Kp[6:9] * (error_joints_pos[2]) - Kd[6:9] * joints_vel[2]
+                tau[3] = Kp[9:12] * (error_joints_pos[3]) - Kd[9:12] * joints_vel[3]
+
                 action = np.zeros(self.mjModel.nu)
                 action = tau.flatten()
                 self.mjData.ctrl = action
@@ -461,8 +461,8 @@ class Data_Collection_Node(Node):
         trajectory_generator_msg.timestamp = float(self.get_clock().now().nanoseconds)
         trajectory_generator_msg.joints_position = np.array([desired_joint_pos[0], desired_joint_pos[1], desired_joint_pos[2], desired_joint_pos[3]]).flatten().tolist()
         trajectory_generator_msg.joints_velocity = np.zeros(12).tolist()
-        trajectory_generator_msg.kp = (np.ones(12) * Kp).tolist()
-        trajectory_generator_msg.kd = (np.ones(12) * Kd).tolist()
+        trajectory_generator_msg.kp = Kp.tolist()
+        trajectory_generator_msg.kd = Kd.tolist()
         self.publisher_trajectory_generator.publish(trajectory_generator_msg)
         
         

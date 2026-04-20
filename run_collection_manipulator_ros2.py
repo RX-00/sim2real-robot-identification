@@ -84,16 +84,11 @@ class Data_Collection_Node(Node):
             self.last_render_time = time.time()
 
 
-        keyframe_id = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "home")
-        self.home_position = self.mjModel.key_qpos[keyframe_id]
-        self.goal_position = copy.deepcopy(self.home_position)
-
-        if(config.robot == "z1"):
-            self.home_position += 0.2
-            self.home_position[2] = -0.5
-            
-            self.goal_position += 0.9
-            self.goal_position[2] = -1.0
+        keyframe_home_id = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "home")
+        keyframe_sys_id_1 = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "sys_id_1")
+        keyframe_sys_id_2 = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "sys_id_2")
+        self.home_position = self.mjModel.key_qpos[keyframe_sys_id_1]
+        self.goal_position = self.mjModel.key_qpos[keyframe_sys_id_2]
         
         
         self.Kp = config.Kp
@@ -333,8 +328,10 @@ class Data_Collection_Node(Node):
         arm_trajectory_generator_msg.desired_arm_joints_velocity = np.zeros(6).tolist()
         arm_trajectory_generator_msg.desired_arm_gripper_position = desired_joint_pos[-1]
         arm_trajectory_generator_msg.desired_arm_gripper_velocity = 0.0
-        arm_trajectory_generator_msg.arm_kp = (np.ones(6) * Kp).tolist()
-        arm_trajectory_generator_msg.arm_kd = (np.ones(6) * Kd).tolist()
+        arm_trajectory_generator_msg.arm_kp = Kp[0:6].tolist()
+        arm_trajectory_generator_msg.arm_kd = Kd[0:6].tolist()
+        arm_trajectory_generator_msg.gripper_kp = Kp[6].tolist()
+        arm_trajectory_generator_msg.gripper_kd = Kd[6].tolist()
         self.publisher_arm_trajectory_generator.publish(arm_trajectory_generator_msg)
         
         

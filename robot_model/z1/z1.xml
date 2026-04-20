@@ -139,7 +139,7 @@
       <motor name="motor4"   joint="joint4" ctrlrange="-30.0 30.0"/>
       <motor name="motor5"   joint="joint5" ctrlrange="-30.0 30.0"/>
       <motor name="motor6"   joint="joint6" ctrlrange="-30.0 30.0"/>
-      <motor name="motorGripper" joint="jointGripper" ctrlrange="-1.51844 1.51844"/>
+      <motor name="motorGripper" joint="jointGripper" ctrlrange="-5 5"/>
   </actuator>
 
   <sensor>
@@ -154,5 +154,7 @@
 
   <keyframe>
     <key name="home" qpos="0 0. -0. -0. 0 0 0.06" ctrl="0 0. -0. -0. 0 0 0"/>
+    <key name="sys_id_1" qpos="0.2 0.2 -0.5 0.2 0.2 0.2 0.1" ctrl="0 0. 0. 0. 0 0 0"/>
+    <key name="sys_id_2" qpos="0.9 0.9 -1.0 0.9 0.9 0.9 -1.0" ctrl="0 0. 0. 0. 0 0 0"/>
   </keyframe>
 </mujoco>
