@@ -86,14 +86,11 @@ class Data_Collection_Node(Node):
         
 
         self.stand_up_and_down_actions = np.zeros(12)
-        keyframe_id = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "down")
-        goDown_qpos = self.mjModel.key_qpos[keyframe_id]
-        self.stand_up_and_down_actions = goDown_qpos[7:29]
-        self.stand_up_and_down_actions[2] += 0.3
-        self.stand_up_and_down_actions[5] += 0.3
-        self.stand_up_and_down_actions[8] += 0.3
-        self.stand_up_and_down_actions[11] += 0.3
+        keyframe_down_id = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "down")
+        keyframe_sys_id_1 = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "sys_id_1")
+        keyframe_sys_id_2 = mujoco.mj_name2id(self.mjModel, mujoco.mjtObj.mjOBJ_KEY, "sys_id_2")
         
+        self.stand_up_and_down_actions = self.mjModel.key_qpos[keyframe_sys_id_1][7:]
         
         self.Kp = config.Kp
         self.Kd = config.Kd
@@ -106,12 +103,14 @@ class Data_Collection_Node(Node):
         self.calibration_reference_calf_trajectory = None
         self.calibration_reference_thigh_trajectory = None
         self.calibration_reference_hip_trajectory = None
-        self.hip_setpoint2 = 0.6
-        self.thigh_setpoint2 = 0.5
-        self.calf_setpoin2 = -1.2
-        self.hip_setpoint1 = self.stand_up_and_down_actions[0]
-        self.thigh_setpoint1 = self.stand_up_and_down_actions[1]
-        self.calf_setpoint1 = self.stand_up_and_down_actions[2]
+        
+        self.hip_setpoint2 = self.mjModel.key_qpos[keyframe_sys_id_2][7]
+        self.thigh_setpoint2 = self.mjModel.key_qpos[keyframe_sys_id_2][8]
+        self.calf_setpoin2 = self.mjModel.key_qpos[keyframe_sys_id_2][9]
+        
+        self.hip_setpoint1 = self.mjModel.key_qpos[keyframe_sys_id_1][7]
+        self.thigh_setpoint1 = self.mjModel.key_qpos[keyframe_sys_id_1][8]
+        self.calf_setpoint1 = self.mjModel.key_qpos[keyframe_sys_id_1][9]
         
         
         self.saved_actual_joints_position = None
@@ -409,7 +408,7 @@ class Data_Collection_Node(Node):
                 self.calibration_reference_thigh_trajectory = None
                 self.calibration_reference_calf_trajectory = None
                 self.chirp_traj_time -= 0.2 # Reduce trajectory time for next trajectory
-                if(self.chirp_traj_time < 0.4):
+                if(self.chirp_traj_time < 0.2):
                     self._save_trajectory_data()
                     self.console.trajectory_collection = False
                     print("Trajectory collection completed.")

@@ -11,9 +11,11 @@ The models (usd and xml) identified so far can be found in the folder **robot_mo
 ## Run a collection
 This repo works best with [unitree-ros2-dls](https://github.com/iit-DLSLab/unitree-ros2-dls) for communicating with unitree go2, b2, a2, and z1 robots. Soon, will support agilex piper arms using [piper-ros2-dls2](https://github.com/iit-DLSLab/piper-ros2-dls2).
 
-1. Choose the robot and the gains in the config file
+1. Choose the robot and the gains in the  [config file](https://github.com/iit-DLSLab/sim2real-robot-identification/blob/main/config.py)
 
-2. Runs one of the following files
+2. In the xml of your robot, add two keyframe (sys_id_1, sys_id_2) to define the start and end point of the chirp trajectory (see [here](https://github.com/iit-DLSLab/sim2real-robot-identification/blob/60e7e48a382dc4293e80062e2bd3f9dc70b7cfc8/robot_model/go2/go2.xml#L252) for an example)
+
+3. Runs one of the following files
 ```bash
 python3 run_collection_quadruped_ros2.py
 python3 run_collection_manipulator_ros2.py
@@ -21,7 +23,7 @@ python3 run_collection_manipulator_ros2.py
 modifying inside USE_MUJOCO_RENDER and USE_MUJOCO_SIMULATION depending on your usecase
 
 
-3. Visualize your trajectory running
+4. Visualize your trajectory running
 ```bash
 python3 datasets/replay_dataset_quadruped.py
 python3 datasets/replay_dataset_manipulator.py

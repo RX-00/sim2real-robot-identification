@@ -1,6 +1,6 @@
 import numpy as np
 
-robot = 'z1'  # 'aliengo', 'go1', 'go2', 'b2', 'hyqreal2', 'z1' 
+robot = 'go2'  # 'aliengo', 'go1', 'go2', 'b2', 'hyqreal2', 'z1' 
 
 # ----------------------------------------------------------------------------------------------------------------
 if(robot == "aliengo"):
