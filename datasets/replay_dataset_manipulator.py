@@ -38,7 +38,10 @@ if __name__ == '__main__':
 
     # Load datasets for calibration
     datasets_path = dir_path + "/" + config.robot + "/traj_0.pt"
-    data = torch.load(datasets_path)
+    try:
+        data = torch.load(datasets_path, map_location="cpu", weights_only=False)
+    except TypeError:
+        data = torch.load(datasets_path, map_location="cpu")
     dataset_actual_joint_pos = data["dof_pos"]
     dataset_time = data["time"]
 
