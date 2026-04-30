@@ -36,7 +36,7 @@ os.system("echo -20 > /proc/" + str(pid) + "/autogroup")
 #for real time, launch it with chrt -r 99 python3 run_controller.py
 
 USE_MUJOCO_RENDER = True
-USE_MUJOCO_SIMULATION = True
+USE_MUJOCO_SIMULATION = False
 
 
 CONTROL_FREQ = config.frequency_collection # Hz 
@@ -117,7 +117,7 @@ class Data_Collection_Node(Node):
         self.saved_actual_joints_velocity = None
         self.saved_desired_joints_position = None
         self.saved_desired_joints_velocity = None
-        self.num_traj_saved = 0
+        self.num_traj_saved = 9
 
 
         # Interactive Command Line ----------------------------

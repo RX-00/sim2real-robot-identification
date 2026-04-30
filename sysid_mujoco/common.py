@@ -157,13 +157,17 @@ def load_dataset_actuator_gains(
         dof_pos = np.asarray(dataset["dof_pos"], dtype=np.float64)
         num_joints = int(dof_pos.shape[1])
 
-    if 'Kp' not in dataset:
-        print(f"{dataset_path} does not contain `Kp` switching to config default")
-    if 'Kd' not in dataset:
-        print(f"{dataset_path} does not contain `Kd` switching to config default")
+    kp_values = dataset.get("kp", dataset.get("Kp"))
+    kd_values = dataset.get("kd", dataset.get("Kd"))
+    if kp_values is None:
+        print(f"{dataset_path} does not contain `kp`/`Kp`; switching to config default")
+        kp_values = config.Kp
+    if kd_values is None:
+        print(f"{dataset_path} does not contain `kd`/`Kd`; switching to config default")
+        kd_values = config.Kd
 
-        kp = dataset['Kp'] if 'Kp' in dataset else np.full(num_joints, config.Kp, dtype=np.float64)  
-        kd = dataset['Kd'] if 'Kd' in dataset else np.full(num_joints, config.Kd, dtype=np.float64)
+    kp = _normalize_per_joint_values(kp_values, num_joints)
+    kd = _normalize_per_joint_values(kd_values, num_joints)
     
     return kp, kd
 
